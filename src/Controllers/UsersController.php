@@ -23,7 +23,7 @@ class UsersController extends Controller
     */
     public function index()
     {
-        return $this->userRepo->all();
+        return $this->response($this->userRepo->all());
     }
 
     /**
@@ -35,7 +35,7 @@ class UsersController extends Controller
     public function store(CreateUserRequest $request)
     {
         $user  = $this->userRepo->create($request->only('username', 'email', 'password'));
-        return response($user, 201);
+        return $this->responseCreate($user);
     }
 
     /**
@@ -46,7 +46,11 @@ class UsersController extends Controller
     */
     public function show($id)
     {
-        return $this->userRepo->find($id);
+        $user = $this->userRepo->find($id);
+
+        if($user) return $this->response($user);
+
+        return $this->responseNotFound(trans('api::users.user_not_found'));
     }
 
    /**
@@ -61,8 +65,7 @@ class UsersController extends Controller
         $user = $this->userRepo->find($id);
         $user->update($request->all());
         $user->save();
-        return response($user, 200)
-            ->header('Content-Type', 'application/json');
+        return $this->responseUpdate($user);
     }
 
     /**
@@ -74,6 +77,6 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $this->userRepo->find($id)->delete();
-        return response('Deleted', 200);
+        return $this->responseDelete(['message' => trans('api::users.user_deleted')]);
     }
 }
