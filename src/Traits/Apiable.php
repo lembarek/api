@@ -15,7 +15,7 @@ trait Apiable
      */
     public function response($data)
     {
-        return response()->json(['status' =>'success', 'data' => $data]);
+        return response()->json(['status' =>'success', 'data' => $data], $this->getStatusCode());
     }
 
     /**
@@ -39,7 +39,6 @@ trait Apiable
     {
         return $this->setStatusCode(200)->response($data);
     }
-
 
     /**
      * response when a record deleted
@@ -73,7 +72,6 @@ trait Apiable
         return $this->setStatusCode(404)->responseWithError($message);
     }
 
-
     /**
      * set the status code
      *
@@ -85,7 +83,6 @@ trait Apiable
         $this->statusCode = $statusCode;
         return $this;
     }
-
 
     /**
      * get the status Code
